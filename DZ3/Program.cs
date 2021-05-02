@@ -6,19 +6,27 @@ namespace DZ3
 {
     class Program
     {
-        private static Random rnd = new Random();
-        public static int ArrMaxElem = 100;
-
-        public static PointClass[] ArrClassFloatOne = new PointClass[ArrMaxElem];
-        public static PointClass[] ArrClassFloatTwo = new PointClass[ArrMaxElem];
         
-        public static PointStruct<float>[] ArrStructFloatOne = new PointStruct<float>[ArrMaxElem];
-        public static PointStruct<float>[] ArrStructFloatTwo = new PointStruct<float>[ArrMaxElem];
+        static void Main(string[] args)
+        {
+            BenchmarkRunner.Run<BenchmarkClass>();            
+        }
+    }
+    public class BenchmarkClass
+    {
+        private Random rnd = new Random();
+        private static int ArrMaxElem = 100;
 
-        public static PointStruct<double>[] ArrStructDoubleOne = new PointStruct<double>[ArrMaxElem];
-        public static PointStruct<double>[] ArrStructDoubleTwo = new PointStruct<double>[ArrMaxElem];
+        private PointClass[] ArrClassFloatOne = new PointClass[ArrMaxElem];
+        private PointClass[] ArrClassFloatTwo = new PointClass[ArrMaxElem];
 
-        public static void Init()
+        private PointStruct<float>[] ArrStructFloatOne = new PointStruct<float>[ArrMaxElem];
+        private PointStruct<float>[] ArrStructFloatTwo = new PointStruct<float>[ArrMaxElem];
+
+        private PointStruct<double>[] ArrStructDoubleOne = new PointStruct<double>[ArrMaxElem];
+        private PointStruct<double>[] ArrStructDoubleTwo = new PointStruct<double>[ArrMaxElem];
+
+        public BenchmarkClass()
         {
             for (int i = 0; i < ArrMaxElem; i++)
             {
@@ -27,7 +35,7 @@ namespace DZ3
 
                 ArrClassFloatOne[i] = ClassFloatOne;
                 ArrClassFloatTwo[i] = ClassFloatTwo;
-                
+
                 ArrStructFloatOne[i].X = (float)rnd.NextDouble() * ArrMaxElem;
                 ArrStructFloatOne[i].Y = (float)rnd.NextDouble() * ArrMaxElem;
                 ArrStructFloatTwo[i].X = (float)rnd.NextDouble() * ArrMaxElem;
@@ -38,49 +46,65 @@ namespace DZ3
                 ArrStructDoubleTwo[i].Y = rnd.NextDouble() * ArrMaxElem;
             }
         }
-        static void Main(string[] args)
-        {
-            Init();
-            BenchmarkSwitcher.FromAssembly(typeof(Program).Assembly).Run(args);
-        }
-    }
-    public class BechmarkClass
-    {
-        
+
+        //Тест метода определения дистанции для класса (тип данных float)
         [Benchmark]
         public void TestPDistClassFloat()
         {
-            for (int i = 0; i < Program.ArrMaxElem; i++)
+            float x;
+            float y;
+            float result;
+            for (int i = 0; i < ArrMaxElem; i++)
             {
-                CalcDist.PDistClassFloat(Program.ArrClassFloatOne[i], Program.ArrClassFloatTwo[i]);
+                x = ArrClassFloatOne[i].X - ArrClassFloatTwo[i].X;
+                y = ArrClassFloatOne[i].Y - ArrClassFloatTwo[i].Y;
+                result = MathF.Sqrt((x * x) + (y * y));
             }
             
         }
 
+        //Тест метода определения дистанции для структуры (тип данных float)
         [Benchmark]
         public void TestPDistStructFloat()
         {
-            for (int i = 0; i < Program.ArrMaxElem; i++)
+            float x;
+            float y;
+            float result;
+            for (int i = 0; i < ArrMaxElem; i++)
             {
-                CalcDist.PDistStructFloat(Program.ArrStructFloatOne[i], Program.ArrStructFloatTwo[i]);
-            }
-        }
-        
-        [Benchmark]
-        public void TestPDistStructDouble()
-        {
-            for (int i = 0; i < Program.ArrMaxElem; i++)
-            {
-                CalcDist.PDistStructDouble(Program.ArrStructDoubleOne[i], Program.ArrStructDoubleTwo[i]);
+                x = ArrStructFloatOne[i].X - ArrStructFloatTwo[i].X;
+                y = ArrStructFloatOne[i].Y - ArrStructFloatTwo[i].Y;
+                result = MathF.Sqrt((x * x) + (y * y));
             }
         }
 
+        //Тест метода определения дистанции для структуры (тип данных double)
+        [Benchmark]
+        public void TestPDistStructDouble()
+        {
+            double x;
+            double y;
+            double result;
+            for (int i = 0; i < ArrMaxElem; i++)
+            {
+                x = ArrStructDoubleOne[i].X - ArrStructDoubleTwo[i].X;
+                y = ArrStructDoubleOne[i].Y - ArrStructDoubleTwo[i].Y;
+                result = MathF.Sqrt((float)((x * x) + (y * y)));
+            }
+        }
+
+        //Тест упрощенного метода определения дистанции (без квадратного корня) для структуры (тип данных float)
         [Benchmark]
         public void TestSimplePDistStructFloat()
         {
-            for (int i = 0; i < Program.ArrMaxElem; i++)
+            float x;
+            float y;
+            float result;
+            for (int i = 0; i < ArrMaxElem; i++)
             {
-                CalcDist.SimplePDistStructFloat(Program.ArrStructFloatOne[i], Program.ArrStructFloatTwo[i]);
+                x = ArrStructFloatOne[i].X - ArrStructFloatTwo[i].X;
+                y = ArrStructFloatOne[i].Y - ArrStructFloatTwo[i].Y;
+                result = (x * x) + (y * y);
             }
         }
     }
