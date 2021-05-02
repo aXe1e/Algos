@@ -6,10 +6,10 @@ namespace DZ3
 {
     class Program
     {
-        
+
         static void Main(string[] args)
         {
-            BenchmarkRunner.Run<BenchmarkClass>();            
+            BenchmarkRunner.Run<BenchmarkClass>();
         }
     }
     public class BenchmarkClass
@@ -60,7 +60,7 @@ namespace DZ3
                 y = ArrClassFloatOne[i].Y - ArrClassFloatTwo[i].Y;
                 result = MathF.Sqrt((x * x) + (y * y));
             }
-            
+
         }
 
         //Тест метода определения дистанции для структуры (тип данных float)
